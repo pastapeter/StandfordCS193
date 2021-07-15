@@ -5,7 +5,7 @@
 ### 스탠포드 강의를 기반으로한 ios 스터디
 
 ### 7/15일 chap1
-![Simulator Screen Shot - iPhone 11 - 2021-07-15 at 20 34 05](https://user-images.githubusercontent.com/69891604/125783113-58251efa-38cc-4120-aebb-f9102fcd2892.png)
+![Simulator Screen Shot - iPhone 11 - 2021-07-15 at 20 34 05](https://user-images.githubusercontent.com/69891604/125783113-58251efa-38cc-4120-aebb-f9102fcd2892.png){: width="300" height="400"}
 
 
 <알게된것>
