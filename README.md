@@ -5,8 +5,9 @@
 ### 스탠포드 강의를 기반으로한 ios 스터디
 
 ### 7/15일 chap1
-images.githubusercontent.com/69891604/125781549-42005241-b161-42d0-907b-d8ed2c8950c7.png)
+https://user-images.githubusercontent.com/69891604/125781549-42005241-b161-42d0-907b-d8ed2c8950c7.png
 
 <알게된것>
-didset - property observer 사용법
+didset - property observer 사용법에 대한 간단한 이해
+하나의 global 변수를 여러 UI 객체가 다 건들고 있을때, 그 변수의 값을 변경시킨다면, didset property observer로 그 변수의 값이 변경되었다면 didset 옵저버가 발동된다. 그렇게 된다면 UIlabel.text를 변경하는 것과 같은 UI 변경이 가능하다.
 
