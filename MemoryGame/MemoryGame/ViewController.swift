@@ -7,6 +7,11 @@
 
 import UIKit
 
+
+enum themesCase: CaseIterable{
+    case holloween, animals, sports, faces
+}
+
 class ViewController: UIViewController {
     
     lazy var game = Concentration(numberOfPairsOfCard: (cardButtons.count+1) / 2) // green array
@@ -15,32 +20,66 @@ class ViewController: UIViewController {
     // lazy는 그냥 초기화되었다고 쳐준다.
     // didset은 안된다.
     
-    var flipCount = 0 {
+    private var flipCount = 0 {
         didSet{
             flipCountLabel.text  = "Flip: \(flipCount)"
         }
     }
     
-    
-    
+    private var score = 0 {
+        didSet{
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
+   
+    @IBOutlet var startButtons: UIButton!
     @IBOutlet var cardButtons: [UIButton]!
-
+    
+    private var isStarted = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        cardButtons.forEach { (button) in
+            button.isHidden = true
+        }
+        flipCountLabel.isHidden = true
+        startButtons.tintColor = .systemOrange
+        startButtons.setTitle("Start",for: .normal)
+        scoreLabel.text = "Score: \(score)"
+        NotificationCenter.default.addObserver(self, selector: #selector(minusScore(_:)), name: Notification.Name("minusScoreNotification"), object: nil)
+        
+    }
+    
+    @objc func minusScore(_ notification: Notification){
+        score -= 1
     }
     
     @IBOutlet weak var flipCountLabel : UILabel!
+    @IBOutlet weak var scoreLabel : UILabel!
     
-
+    
+    @IBAction func startGame(_ sender: UIButton) {
+        if !isStarted {
+            cardButtons.forEach { (button) in
+                button.isHidden = false
+            }
+            flipCountLabel.isHidden = false
+            startButtons.isHidden = true
+        }
+    }
+        
+    
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
         guard let cardNumber = cardButtons.firstIndex(of: sender) else {
             print("chosen card was not in cardButtons")
             return
         }
         game.chooseCard(at: cardNumber)
-        print("carNumber isfacedup \(game.cards[cardNumber].isFaceUp) and ismatches \(game.cards[cardNumber].isMatched)")
-         updateViewFromModel()
+        flipCount = game.flipCountGetter()
+        if game.cards[cardNumber].isMatched{
+            score += 2
+        }
+        updateViewFromModel()
         
     }
     
@@ -58,9 +97,9 @@ class ViewController: UIViewController {
         }
     }
     
-    var emojiChoices = ["👻", "🧙‍♀️", "💀", "🎃", "😱", "🦇", "🍬", "😈", "🦹‍♀️"]
+   private var emojiChoices = ["👻", "🧙‍♀️", "💀", "🎃", "😱", "🦇", "🍬", "😈", "🦹‍♀️"]
     
-    var emoji = [Int:String]()
+    private var emoji = [Int:String]()
     
     func emoji(for card: Card) -> String {
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {

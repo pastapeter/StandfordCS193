@@ -15,6 +15,7 @@
 		28ABD2B126A01DFD000ECC25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28ABD2AF26A01DFD000ECC25 /* LaunchScreen.storyboard */; };
 		28ABD2DC26A1E35F000ECC25 /* Concentration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ABD2DB26A1E35F000ECC25 /* Concentration.swift */; };
 		28ABD2DE26A1E49B000ECC25 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ABD2DD26A1E49B000ECC25 /* Card.swift */; };
+		28CB466B26A5C969006AA0E7 /* Themes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CB466A26A5C969006AA0E7 /* Themes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		28ABD2B226A01DFD000ECC25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28ABD2DB26A1E35F000ECC25 /* Concentration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concentration.swift; sourceTree = "<group>"; };
 		28ABD2DD26A1E49B000ECC25 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		28CB466A26A5C969006AA0E7 /* Themes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				28ABD2A626A01DFB000ECC25 /* SceneDelegate.swift */,
 				28ABD2A826A01DFB000ECC25 /* ViewController.swift */,
 				28ABD2DB26A1E35F000ECC25 /* Concentration.swift */,
+				28CB466A26A5C969006AA0E7 /* Themes.swift */,
 				28ABD2DD26A1E49B000ECC25 /* Card.swift */,
 				28ABD2AA26A01DFB000ECC25 /* Main.storyboard */,
 				28ABD2B226A01DFD000ECC25 /* Info.plist */,
@@ -152,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28ABD2A926A01DFB000ECC25 /* ViewController.swift in Sources */,
+				28CB466B26A5C969006AA0E7 /* Themes.swift in Sources */,
 				28ABD2DC26A1E35F000ECC25 /* Concentration.swift in Sources */,
 				28ABD2DE26A1E49B000ECC25 /* Card.swift in Sources */,
 				28ABD2A526A01DFB000ECC25 /* AppDelegate.swift in Sources */,

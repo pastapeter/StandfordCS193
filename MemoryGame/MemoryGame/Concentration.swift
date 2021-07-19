@@ -11,15 +11,18 @@ import Foundation
 class Concentration {
  
     var cards = [Card]()
+    private var cardsTouched = Set<Int>()
     
     // 어떤 카드도 앞면이 아니다. 그러면 일단 뒤집는다.
     // 두개다 뒤집혀있다. 다르면 다시 뒤집어져야한다.
     // 매칭되었다?
     
-    var indexOfOneAndOnlyFaceUpCard: Int?
+    private var indexOfOneAndOnlyFaceUpCard: Int?
+    private var flipCount = 0
+    
     
     func chooseCard(at index: Int){
-        
+        flipCount += 1
         if !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 //자기가 고른것을 쓸수는 없으니!
@@ -28,9 +31,22 @@ class Concentration {
                 if cards[matchIndex].identifier == cards[index].identifier {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
+//                    cardsTouched.remove(cards[matchIndex].identifier)
+                } else {
+                    if cardsTouched.contains(cards[matchIndex].identifier){
+                        print("matchIndex is in")
+                        NotificationCenter.default.post(name: Notification.Name("minusScoreNotification"), object: nil)
+                    }
+                    if cardsTouched.contains(cards[index].identifier){
+                        print("index is in")
+                        NotificationCenter.default.post(name: Notification.Name("minusScoreNotification"), object: nil)
+                    }
                 }
+                cardsTouched.insert(cards[index].identifier)
+                cardsTouched.insert(cards[matchIndex].identifier)
                 cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpCard = nil
+                
             } else {
                 //ismatched == true
                     // either no cards or 2 cards are face
@@ -43,6 +59,11 @@ class Concentration {
             }
         }
     }
+    
+    func flipCountGetter() -> Int{
+        return flipCount
+    }
+    
     
     init(numberOfPairsOfCard: Int) {
         for _ in 0..<numberOfPairsOfCard{
