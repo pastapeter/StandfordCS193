@@ -30,3 +30,109 @@ Model과 View를 분리시키기 위해서 Model에서 notificationcenter의 pos
 emoji를 받아오는 것을 싱글톤의 함수로 만들었다.
 theme은 enum으로 두고 enum은 Int, caseIterable 프로토콜을 적용시켜서, Int.random(in: )메소드를 써서 한줄로 가져오게 만들었다.
 
+### chap3
+### Computed properties   
+get{} : 여기서 계산된결과를 return.   
+set{} :  값을 할당할때, 여기 코드가 실행된다.    
+
+* get-only(가능)
+
+- 그래서 computed property는 언제 쓰일까???
+
+많은 경우에 class나 struct 내에서 볼수 있는 속성들이 구조체의 다른 상태로부터 얻어졌을 수 있다.  
+이때의 경우 computed properties를 쓰지 않았을 경우, 결국은 같은 정보를 다른 변수에 저장하고 있을 가능성이 높다.   
+같은 정보를 다른 변수에 담다보면, 정보의 동기화가 안될 수도 있고, 그렇다보면 많은 문제들이 발생하게 된다.   
+그래서 computed property를 사용한다.  
+사용 예시:
+~~~
+private var indexOfOneAndOnlyFaceUpCard: Int? //앞면인 카드의 index를 찾아준다.
+~~~
+하지만 이 변수는 결국에는 우리가 카드 배열에서 앞면인 것을 찾으면 바로 return 해주는 computed properties로 구현한다면, 변수의 변화에 대한 신경을 안써도 된다.
+~~~
+private var indexOfOneAndOnlyFaceUpCard: Int? {
+    get {
+        // 카드를 다보면서, 앞면인 카드가 있다면 그것을 return
+        // 없다면? return nil
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        foundIndex = index
+                    } else {
+                        return nil
+                    }
+                }
+            }
+        return foundIndex
+        }
+    set {
+        // newValue의 카드를 제외하고, 다 카드를 뒤집어 엎는다.
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+        }
+}
+~~~
+
+- 그렇다면 언제 computed property or method???
+
+
+해당 작업이 속성으로 인식되는지에 달려있다.  
+위의 index는 속성으로 인식된다. -> 앞면인 카드이기 때문이다.
+그렇지만 get or set에 많은 일을 넣어야한다면? method를 만들어야할 것이다.
+
+### Access Control
+- internal : default임, 앱 내의 어떤 사람, 어떤 객체가 그 메소드나 변수에 접근 가능하다.
+- private : 그 객체 안에서만 쓸수 있는 메소드나 변수
+- privage(set) : set은 private이고, get은 어디서든 접근 가능
+ - fileprivate: 파일 내에 여러 class가 있더라도 서로 접근 가능
+ - 일단 다 private으로 하고 필요할 경우에 private을 빼주자
+ 
+ ### enum
+ - 값 타입 
+ - associated Data
+    ~~~
+    enum FastFoodMenuItem {
+        case hamburger(numberOfPatties: Int)
+        case fries(size: FryOrderSize)
+        case drink(String, ounces: Int) //안정해진 것은 우리가 그냥 임의적으로 넣어줄 수 있다.
+        case cookie
+    }
+    
+    enum FryOrderSize {
+        case large
+        case small
+    }
+    
+    let menuItem: FastFoodMenuItem.hamburger(patties: 2)
+    
+    //switch
+    var menuItem = FastFoodMenuItem.hamburger(patties: 2)
+    switch menuItem { //이때는 associated Data를 신경안써도된다.
+        case FastFoodMenuItem.hamberger: print("burger")
+        case FastFoodMenuItem.fries: print("fries")
+        case FastFoodMenuItem.drink: print("drink")
+        case FastFoodMenuItem.cookie: print("cookie")
+
+    }
+    ~~~
+   -  Associated Data에 대한 switch 문은 let 을 사용한다.
+    ~~~
+    var menuItem = FastFoodMenuItem.drink("coke", ounces: 2)
+    switch menuItem { //이때는 associated Data를 신경안써도된다.
+        case .hamberger(let pattyCount): print("burger with \(pattycount)")
+        case .fries(let size): print("\(size)size fries")
+        case .drink(let brand, let ounces): print("\(ounces)oz \(brand)")
+        case .cookie: print("cookie")
+    }
+    ~~~
+    - Properties는 안되지만, methods은 있어도 된다.
+    - enum을  수정할때는 값타입이기 때문에 mutating이기 때문이다.
+    ~~~
+    enum FastFoodMenuItem{
+        mutating func switchToBeingACookie() {
+        ,,,,
+        }
+    }
+    ~~~
+    
