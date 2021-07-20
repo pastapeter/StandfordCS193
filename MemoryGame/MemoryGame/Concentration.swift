@@ -10,18 +10,38 @@ import Foundation
 
 class Concentration {
  
-    var cards = [Card]()
+    private(set) var cards = [Card]()
     private var cardsTouched = Set<Int>()
     
     // 어떤 카드도 앞면이 아니다. 그러면 일단 뒤집는다.
     // 두개다 뒤집혀있다. 다르면 다시 뒤집어져야한다.
     // 매칭되었다?
     
-    private var indexOfOneAndOnlyFaceUpCard: Int?
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        foundIndex = index
+                    } else {
+                        return nil
+                    }
+                }
+            }
+            return foundIndex
+        }
+        set {
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+        }
+    }
     private var flipCount = 0
     
     
     func chooseCard(at index: Int){
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)) : chosen index not in the cards")
         flipCount += 1
         if !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
@@ -45,17 +65,9 @@ class Concentration {
                 cardsTouched.insert(cards[index].identifier)
                 cardsTouched.insert(cards[matchIndex].identifier)
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpCard = nil
                 
             } else {
-                //ismatched == true
-                    // either no cards or 2 cards are face
-                    // 이건 다른카드를 골라서 비교할 필요가 없는것!
-                    for flipDownIndex in cards.indices {
-                        cards[flipDownIndex].isFaceUp = false
-                    }
-                    cards[index].isFaceUp = true
-                    indexOfOneAndOnlyFaceUpCard = index
+                indexOfOneAndOnlyFaceUpCard = index
             }
         }
     }
@@ -66,6 +78,7 @@ class Concentration {
     
     
     init(numberOfPairsOfCard: Int) {
+        assert(numberOfPairsOfCard < 1, "Concentration.init(\(numberOfPairsOfCard)) : you must have at least on pair of cards")
         for _ in 0..<numberOfPairsOfCard{
             let card = Card()
             cards += [card, card]
@@ -74,7 +87,7 @@ class Concentration {
         cards = shuffleCards(with: cards)
     }
     
-    func shuffleCards(with cards: [Card]) -> [Card]{
+    private func shuffleCards(with cards: [Card]) -> [Card]{
         var cards = cards
         cards.shuffle()
         return cards
