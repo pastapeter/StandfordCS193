@@ -17,9 +17,9 @@ struct Card {
     // Model은 UI와 독립적이다.
     // 이미지, jpeg은 없어야해
     
-    static var identifierFactory = 0
+    private static var identifierFactory = 0
     
-    static func getUniqueIdentifier() -> Int {
+    private static func getUniqueIdentifier() -> Int {
         identifierFactory += 1
         return identifierFactory
     }
