@@ -25,3 +25,8 @@ Static property & Static method
 Model과 View를 분리시키기 위해서 Model에서 notificationcenter의 post기능으로 신호를 보내고, view에서 notification.default.addObserver로 신호를 받아서 점수 - 구현을 했다.
 시작버튼을 눌렀을때, 게임시작이 되고, 그러면 게임시작을 다시 누르게 된다면, 다시 작동하게 만들었다.
 셔플함수를 만들었다.
+
+### 7.20 과제 refactor
+emoji를 받아오는 것을 싱글톤의 함수로 만들었다.
+theme은 enum으로 두고 enum은 Int, caseIterable 프로토콜을 적용시켜서, Int.random(in: )메소드를 써서 한줄로 가져오게 만들었다.
+
