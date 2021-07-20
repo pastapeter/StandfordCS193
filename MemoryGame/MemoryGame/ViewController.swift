@@ -8,8 +8,8 @@
 import UIKit
 
 
-enum themesCase: CaseIterable{
-    case holloween, animals, sports, faces
+enum themesCase: Int, CaseIterable{
+    case holloween = 0, animals = 1, sports = 2
 }
 
 class ViewController: UIViewController {
@@ -47,7 +47,6 @@ class ViewController: UIViewController {
         startButtons.setTitle("Start",for: .normal)
         scoreLabel.text = "Score: \(score)"
         NotificationCenter.default.addObserver(self, selector: #selector(minusScore(_:)), name: Notification.Name("minusScoreNotification"), object: nil)
-        
     }
     
     @objc func minusScore(_ notification: Notification){
@@ -97,8 +96,7 @@ class ViewController: UIViewController {
         }
     }
     
-   private var emojiChoices = ["👻", "🧙‍♀️", "💀", "🎃", "😱", "🦇", "🍬", "😈", "🦹‍♀️"]
-    
+    private var emojiChoices = Themes.shared.getEmoji(with: themesCase.allCases[Int.random(in: 0...2)].rawValue)
     private var emoji = [Int:String]()
     
     func emoji(for card: Card) -> String {
@@ -109,7 +107,5 @@ class ViewController: UIViewController {
         print("identifier \(card.identifier)")
         return emoji[card.identifier] ?? "?"
     }
-    
-    
 }
 
