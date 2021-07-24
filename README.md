@@ -233,7 +233,119 @@ lazy와 많이 쓰인다. 누군가 요청하기 전에는 실행되지 않기 �
 ### Capturing -> 나중에 자세히!!
 
 
+## Chap5
+### Thrown Errors
+애러를 날리면 우리는 do catch문으로 잡을 수 있다.
+~~~
+do{
+    try context.save()
+} catch let error {
+    throw error
+}
+~~~
+여기서 우리는 try!와 try?를 쓸 수 있다.  
+try!는 시도를 해보고 애러가 발생하면 앱이 강제종료 됩니다.
+~~~
+try! content.save()
+~~~
+try?는 시도를 해보고 애러를 날린다면, 날린 에러를 무시하는 것이다. 
+~~~
+let x = try? errorProneFunctionThatReturnsAnInt()
+~~~
+error가 날때는 함수의 return 을 옵셔널 버전으로 바꿔준다. -> x는 ?이 되는 것이다.
 
+### as?
+~~~ 
+let unknown: Any = ...
+if let foo = unknown as? MyType {
+    // foo는 이제 여기서 타입은 MyType
+    // 우리는 foo에게 MyType 관련 메세지를 보낼 수 있다
+}
+~~~
 
+### Views
+맨 위에는 view가 있다. var view: UIView.  
+outlet을 사용한다면? 뷰의 계층구조를 사용해서 view에 접근이 아닌 바로 접근이 가능하다.  
+- Initializing a UIView
+~~~
+init(frame: CGRect) //뷰가 코드로 만들어져있을때
+init(coder: NSCoder) //뷰가 스토리보드로 만들어졌을때
+~~~
+init이 필요하다면 위의 2개가 모두 구현을 해야한다. 
+~~~
+func setup() {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+        }
+    required init?(coder: aDecoder: NScoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+}
+~~~
+- awakeFromNib()  
+인터페이스 빌더에 나온 모든 오브젝트에게 보내지는 함수이다. 여기에서 초기화되는 것은 인터페이스 빌더에서 만들어진 view에만 해당된다.
 
+### CGFloat
+- 부동소수점을 init을 통해 CGFloat()으로 view를 그릴 수 있다.
+### CGPoint
+2개의 CGFloat으로 점을 찾는다.
+~~~
+var point = CGPoint(x: 37.0, y: 55.2)
+point.y -= 30
+point.x += 20.0
+~~~
+### CGSize
+width, height으로 크기를 나타낸다.
+~~~
+var size = CGSize(width: 100.0, height: 50.0)
+size.width += 42.5
+size.height += 75
+~~~
+### CGRect
+사각형을 그린다.
+~~~
+struct CGRect {
+    var origin: CGPoint
+    var size: CGSize
+}
+let rect = CGRect(origin: aCGPoint, size: aCGSize)
+~~~
+### View Coordinate System
+원점은 좌측상단!
 
+### var bounds : CGRect
+원점과 높이, 너비 등을 알려준다.
+
+### frame은 그리는데 아무런 상관이 없다. frame은 우리의 좌표계가 아니라, superview에서 어디있는지 알려준다. frame, center은 드로잉하는 곳이 어디인지를 알려주고, bounds는 지금 드로잉 하는 곳을 말한다.
+
+### override func draw(_ rect : CGRect)
+무조건 override해야한다.
+setNeedsDisplay()을 활용할 수 있다.
+
+### Font
+- preferred font
+~~~
+static func preferredFont(forTextStyle: UIFontTextStyle) -> UIFont
+
+UIFontTextStyle.headline
+               .body
+               .footnote
+~~~
+
+ - UIFontMetrix
+폰트의 크기를 변경하는 것:  UIFontMetrics
+~~~
+let metrics = UIFontMetrics(forTextStyle: .body)
+let fontToUse = metrics.scaledFont(for: font)
+~~~
+사용자 명령에 따라 크기를 조정한다.
+
+### bounds change
+var contentMode: UIviewContentMode
+- .redraw()
+
+### override func layoutSubviews() 
+ - 이것은 오토레이아웃을 쓰지 않는 방법으로 진행한다.
+ 
