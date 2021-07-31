@@ -15,7 +15,6 @@ struct Card{
     let cardShade: Shade
     
     var isMatched = false
-    
     func shade() -> String {
         if self.cardShade == .empty {
             return self.cardShade.rawValue
@@ -25,7 +24,7 @@ struct Card{
     }
 }
 
-extension Card {
+extension Card: Equatable {
     enum Suit: String, CustomStringConvertible {
         var description: String {
             return "\(self.rawValue)"
