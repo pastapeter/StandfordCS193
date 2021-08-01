@@ -8,15 +8,26 @@
 import Foundation
 
 protocol isMatchedDelegate {
-    func setCardDidMatched(_ Cards: Cards, indexs: [Int])
+    func setCardDidMatched(_ Cards: inout Cards, indexs: [Int])
 }
 
 struct Cards{
     
     var cards = [Card]()
     private var discarded = [Card]()
-    private var chosenCardArray = [(String, String, String, Int, Int)]()
-    var shouldChangedCardsIndex = [Int]()
+    private var chosenCardArray = [(color: String, String, String, Int, Int)]()
+    var shouldChangeCardsIndice = [Int]()
+    
+    mutating func addCard(with card: Card){
+        discarded.append(card)
+    }
+    
+    mutating func changeCard(for index: Int, with newCard: Card){
+        discarded[index] = newCard
+    }
+    mutating func getCard(at index: Int) -> Card{
+        return discarded[index]
+    }
     
     var delegate: isMatchedDelegate?
    
@@ -45,18 +56,19 @@ struct Cards{
 
     //MARK: - ChooseCards
     
-    mutating func chooseCards(at index: Int) {
+    mutating func chooseCard(at index: Int) {
         chosenCardArray.append(
             ("\(discarded[index].cardShape)",
              "\(discarded[index].cardColor)",
              "\(discarded[index].cardShade)",
              discarded[index].cardNumber, index))
+        
         guard chosenCardArray.count == 3 else {return}
         print(chosenCardArray)
         
         //MARK: - Set Game 규칙
 
-        guard (Set(arrayLiteral: chosenCardArray[0].0, chosenCardArray[1].0, chosenCardArray[2].0).count == 1) || (Set(arrayLiteral: chosenCardArray[0].0, chosenCardArray[1].0, chosenCardArray[2].0).count == 3) else {
+        guard (Set(arrayLiteral: chosenCardArray[0].color, chosenCardArray[1].color, chosenCardArray[2].color).count == 1) || (Set(arrayLiteral: chosenCardArray[0].color, chosenCardArray[1].color, chosenCardArray[2].color).count == 3) else {
             chosenCardArray.removeAll()
             print("shape error")
             NotificationCenter.default.post(name: Notification.Name("doItAgainNotification"), object: nil)
@@ -84,14 +96,14 @@ struct Cards{
             for card in chosenCardArray {
                 if i == card.4 {
                     discarded[i].isMatched = true
-                    shouldChangedCardsIndex.append(i)
+                    shouldChangeCardsIndice.append(i)
                 }
             }
         }
         
-        self.delegate?.setCardDidMatched(self, indexs: shouldChangedCardsIndex)
+        self.delegate?.setCardDidMatched(&self, indexs: shouldChangeCardsIndice)
         
-        shouldChangedCardsIndex.removeAll()
+        shouldChangeCardsIndice.removeAll()
         chosenCardArray.removeAll()
         NotificationCenter.default.post(name: Notification.Name("doItAgainNotification"), object: nil)
     }

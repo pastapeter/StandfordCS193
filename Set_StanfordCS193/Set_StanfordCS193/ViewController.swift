@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     @IBOutlet private var startButton: UIButton!
     @IBOutlet private var moreCardButton: UIButton!
     
-    var cardCollection = [Card]()
     
     private var selectedButtonNum: Int {
         get {
@@ -37,15 +36,15 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         for button in setButtons {
             if let card = setCards.draw() {
-                cardCollection.append(card)
-                setButtonUI(with: button, with: card)
+                setCards.addCard(with: card)
+                setButtonUI(to: button, with: card)
             }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(updateButtonSelection(_:)), name: Notification.Name("doItAgainNotification"), object: nil)
         setCards.delegate = self
     }
     
-    func setButtonUI(with button: UIButton, with card: Card) {
+    func setButtonUI(to button: UIButton, with card: Card) {
         let buttonString = String([Character](repeating: Character(card.cardShape.rawValue), count: card.cardNumber))
         var attributes = [NSAttributedString.Key: Any]()
         switch card.cardShade {
@@ -93,7 +92,7 @@ class ViewController: UIViewController {
             return
         }
         sender.isEnabled = false
-        setCards.chooseCards(at: cardIndex)
+        setCards.chooseCard(at: cardIndex)
         updateButtons()
     }
     
@@ -110,31 +109,26 @@ class ViewController: UIViewController {
                 }
             }
         }
-        
     }
-
-
 }
 
 
 extension ViewController: isMatchedDelegate {
     
-    func setCardDidMatched(_ Cards: Cards, indexs: [Int]) {
+    func setCardDidMatched(_ Cards: inout Cards, indexs: [Int]) {
         var newCards = [Card]()
         var newCardIndex = 0
-        DispatchQueue.main.async {
-            for _ in 0..<3 {
-                if let card = self.setCards.draw() {
-                    newCards.append(card)
-                }
+        for _ in 0..<3 {
+            if let card = Cards.draw() {
+                newCards.append(card)
             }
-            for index in indexs {
-                self.cardCollection[index] = newCards[newCardIndex]
-                newCardIndex += 1
-            }
-            for buttonIndex in self.setButtons.indices {
-                self.setButtonUI(with: self.setButtons[buttonIndex], with: self.cardCollection[buttonIndex])
-            }
+        }
+        for index in indexs {
+            self.setCards.changeCard(for: index, with: newCards[newCardIndex])
+            newCardIndex += 1
+        }
+        for buttonIndex in self.setButtons.indices {
+            self.setButtonUI(to: self.setButtons[buttonIndex], with: self.setCards.getCard(at: buttonIndex))
         }
     }
 }

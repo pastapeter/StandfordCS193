@@ -34,6 +34,7 @@ extension Card: Equatable {
         case rectangle = "■"
         
         static var all = [Suit.triangle, .round, .rectangle]
+        // caseitarable -> allcases 속성
     }
     
     enum Color: String, CustomStringConvertible {
